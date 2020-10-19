@@ -72,12 +72,13 @@ class UserController{
       const schema = Yup.object().shape({
         
         email: Yup.string().email().required(),
-        
-        password: Yup.string().required(),
+
+        password: Yup.string().required()
+        .oneOf([Yup.ref('confirmPassword')], null),
 
         confirmPassword: Yup.string().min(5)
         .required()
-        .oneOf([Yup.ref('password')], 'ConfirmPass must equal password')
+        .oneOf([Yup.ref('password')], 'Passwords do not match')
       });
       
 
@@ -91,22 +92,22 @@ class UserController{
 
       if(!emailExists){
       return response.status(409).json({message: 'Email not exists!'});
-    }
-        
+
+      }
+
 
       const verifyPassword = await bcrypt.compare(password, emailExists.password);
 
 
       if(!verifyPassword){
-        return response.status(409).json({message: 'Password no match'})
+        return response.status(409).json({message: 'Password no match'});
 
       }
+        
 
 
+      await userRepository.remove(emailExists);
 
-
-      
-      
       return response.json({ok: true});
   }
   
