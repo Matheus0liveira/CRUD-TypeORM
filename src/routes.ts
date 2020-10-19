@@ -12,8 +12,11 @@ const routes = Router();
 routes.post('/session', AuthController.authenticate);
 
 
+routes.get('/users', UserController.index);
+
 routes.post('/users/create', UserController.create);
-routes.delete('/users/delete', UserController.delete);
+
+routes.delete('/users/delete', authMiddleWare, UserController.delete);
 routes.put('/users/update', authMiddleWare, UserController.update);
 
 

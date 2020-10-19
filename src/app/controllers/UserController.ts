@@ -5,9 +5,59 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User';
 import { getRepository,  getManager } from 'typeorm';
 import * as Yup from 'yup';
+import UserView from '../View/UserView';
 
 
 class UserController{
+
+
+	async index(request: Request, response: Response){
+
+		const { name, options } = request.query;
+
+		const userRepository = getRepository(User);
+
+
+		// const users = await userRepository.find({ where: { name }});
+
+
+		if(options === 'user'){
+
+
+			const user = await userRepository.findOne({ where: { name } });
+
+			return response.status(202).json({user});
+
+
+		}
+
+
+		if(options === 'users'){
+
+
+		 const users = await userRepository.find({ where: { name } });
+
+		 return response.status(202).json({users});
+			
+			
+		}
+
+
+		if(!options || !name){
+		 return response.status(202).json({message: "Query Params: name and options is required"});
+			
+			
+		}
+
+
+		
+		
+
+		
+
+	}
+
+  //show()
 
 
   async create(request: Request, response: Response){
@@ -193,7 +243,7 @@ class UserController{
     const updateUser = await userRepository.findOne(id);
 
 
-    return response.json(updateUser);
+    return response.json(UserView.render(updateUser));
 
     
   
