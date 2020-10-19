@@ -22,7 +22,7 @@ export default class User {
 
     @BeforeInsert()
     @BeforeUpdate()
-    @BeforeUpdate()
+    @BeforeRemove()
     hashPassword(){
         this.password =  bcrypt.hashSync(this.password, 10);
     }
